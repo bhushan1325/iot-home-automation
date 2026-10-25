@@ -1,0 +1,77 @@
+================================================================================
+     COLLEGE PROJECT SUBMISSION: 5-MINUTE SETUP GUIDE FOR ESP32 MODEL
+================================================================================
+
+PROJECT: IoT-Based Home Automation System using ESP32
+NOTE: Flashing is done ONCE from your friend's laptop (takes 5 mins).
+After that, the laptop is NOT needed. You will run everything from your MOBILE PHONE!
+
+--------------------------------------------------------------------------------
+PART 1: ON YOUR MOBILE PHONE (Setup Hotspot)
+--------------------------------------------------------------------------------
+1. Go to your Phone Settings -> Hotspot.
+2. Note your exact:
+   - Hotspot Name (SSID)
+   - Hotspot Password
+3. Set the Hotspot Band to 2.4 GHz (or enable "Extend Compatibility").
+   *ESP32 works on 2.4 GHz Wi-Fi.
+
+--------------------------------------------------------------------------------
+PART 2: ON YOUR FRIEND'S LAPTOP (5 Minutes Flashing)
+--------------------------------------------------------------------------------
+STEP 1: Download the Project
+1. Open Chrome on the laptop.
+2. Go to: https://github.com/bhushan1325/iot-home-automation
+3. Click green "Code" button -> click "Download ZIP".
+4. Extract the ZIP folder onto the Desktop.
+
+STEP 2: Open Arduino IDE & Install Required Packages
+1. If Arduino IDE is not installed, download it (1 min):
+   https://www.arduino.cc/en/software
+2. Open Arduino IDE:
+   - Go to File -> Preferences.
+     In "Additional Boards Manager URLs", paste:
+     https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+     Click OK.
+   - Go to Tools -> Board -> Boards Manager, search "esp32" and click Install.
+   - Go to Tools -> Manage Libraries, search "ArduinoJson" and click Install.
+
+STEP 3: Add Your Hotspot Details
+1. In the extracted folder on Desktop, navigate to:
+   iot-home-automation/firmware/esp32_home_automation/
+2. Open "config.h" (or rename config.h.example to config.h) in Notepad.
+3. Edit these lines:
+   const char* WIFI_SSID     = "YOUR_HOTSPOT_NAME";
+   const char* WIFI_PASSWORD = "YOUR_HOTSPOT_PASSWORD";
+   const char* BACKEND_BASE_URL = "https://your-project.up.railway.app";
+4. Press Ctrl + S to save.
+
+STEP 4: Plug In & Upload
+1. Connect ESP32 to laptop using a USB data cable.
+2. In Arduino IDE:
+   - Open: esp32_home_automation.ino
+   - Tools -> Board -> select DOIT ESP32 DEVKIT V1
+   - Tools -> Port -> select your COM port (e.g. COM3 or COM4)
+   - Click the Upload arrow button (top left).
+   *(If console says "Connecting........_____", press & hold BOOT button on ESP32 for 2 seconds).*
+3. When it says "Done uploading", YOU ARE FINISHED WITH THE LAPTOP!
+   Unplug the ESP32 and return the laptop to your friend.
+
+--------------------------------------------------------------------------------
+PART 3: TOMORROW AT COLLEGE (Live Presentation Using Mobile Only)
+--------------------------------------------------------------------------------
+1. Turn ON your phone's Mobile Hotspot.
+2. Power the ESP32 (plug its USB into your mobile power bank or phone charger).
+   -> Within 5 seconds, the ESP32 joins your phone hotspot automatically!
+3. Open Chrome or Safari on your mobile phone:
+   Go to your website: https://your-project.up.railway.app/index.html
+4. Sign In:
+   - Username: admin
+   - Password: Admin@Home2026!
+5. In front of the professors:
+   - Show that "Living Room Fan" shows green ONLINE badge.
+   - Tap the switch on your phone screen -> PHYSICAL FAN SPINS!
+   - Tap it again -> PHYSICAL FAN STOPS!
+   - Tap "Activity History" tab -> Show the live timestamps and verified receipts!
+
+================================================================================
