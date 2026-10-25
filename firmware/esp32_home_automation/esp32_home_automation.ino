@@ -3,12 +3,14 @@
  * PROJECT: IoT-Based Home Automation System using ESP32
  * FIRMWARE: Production C++ Arduino Sketch for ESP32 DevKit V1
  * FEATURES: Non-blocking WiFi reconnect, authenticated REST polling, 
- *           heartbeat reporting, active-low relay driving, fail-safe boot.
+ *           heartbeat reporting, active-low relay driving, fail-safe boot,
+ *           dual HTTP and Railway HTTPS support via WiFiClientSecure.
  * =========================================================================
  */
 
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <WiFiClientSecure.h>
 #include <ArduinoJson.h>
 
 // Include local configuration (Copy config.h.example to config.h)
@@ -27,6 +29,7 @@ struct DeviceLocalState {
 
 DeviceLocalState relayStates[NUM_RELAYS];
 unsigned long lastWifiRetry = 0;
+WiFiClientSecure secureClient;
 
 // Helper: Convert boolean state to digital pin level respecting active-low logic
 int getPinLevel(bool turnOn) {
@@ -37,6 +40,16 @@ int getPinLevel(bool turnOn) {
   }
 }
 
+// Helper: Initialize HTTP or HTTPS client automatically based on URL scheme
+bool initHttpConnection(HTTPClient &http, const String &url) {
+  if (url.startsWith("https://")) {
+    secureClient.setInsecure(); // Allows connecting to Railway HTTPS without expiring CA certs
+    return http.begin(secureClient, url);
+  } else {
+    return http.begin(url);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // SETUP: Safe Boot Sequence
 // ---------------------------------------------------------------------------
@@ -44,7 +57,7 @@ void setup() {
   Serial.begin(115200);
   delay(1000);
   Serial.println(F("\n======================================================="));
-  Serial.println(F("  IoT Home Automation System - ESP32 Firmware v1.0.0"));
+  Serial.println(F("  IoT Home Automation System - ESP32 Firmware v1.1.0"));
   Serial.println(F("======================================================="));
 
   // 1. Initialize Relays in a SAFE default state (All OFF)
@@ -95,10 +108,14 @@ void sendHeartbeat(int index) {
   HTTPClient http;
   String url = String(BACKEND_BASE_URL) + "/api/esp32/heartbeat";
 
-  http.begin(url);
+  if (!initHttpConnection(http, url)) {
+    Serial.printf("[HEARTBEAT] Connection failed for %s\n", url.c_str());
+    return;
+  }
+
   http.addHeader("Content-Type", "application/json");
   http.addHeader("X-Device-Token", RELAYS[index].deviceToken);
-  http.setTimeout(4000);
+  http.setTimeout(5000);
 
   StaticJsonDocument<256> doc;
   doc["deviceKey"]       = RELAYS[index].deviceKey;
@@ -106,15 +123,13 @@ void sendHeartbeat(int index) {
   doc["uptimeSeconds"]   = millis() / 1000;
   doc["wifiRssi"]        = WiFi.RSSI();
   doc["ipAddress"]       = WiFi.localIP().toString();
-  doc["firmwareVersion"] = "1.0.0";
+  doc["firmwareVersion"] = "1.1.0-railway";
 
   String requestBody;
   serializeJson(doc, requestBody);
 
   int httpCode = http.POST(requestBody);
-  if (httpCode == HTTP_CODE_OK) {
-    // Heartbeat successfully accepted
-  } else {
+  if (httpCode != HTTP_CODE_OK && httpCode != -1) {
     Serial.printf("[HEARTBEAT] Failed for %s. HTTP: %d\n", RELAYS[index].deviceKey, httpCode);
   }
   http.end();
@@ -129,10 +144,13 @@ void pollPendingCommands(int index) {
   HTTPClient http;
   String url = String(BACKEND_BASE_URL) + "/api/esp32/poll";
 
-  http.begin(url);
+  if (!initHttpConnection(http, url)) {
+    return;
+  }
+
   http.addHeader("X-Device-Key", RELAYS[index].deviceKey);
   http.addHeader("X-Device-Token", RELAYS[index].deviceToken);
-  http.setTimeout(3000);
+  http.setTimeout(4000);
 
   int httpCode = http.GET();
   if (httpCode == HTTP_CODE_OK) {
@@ -179,10 +197,13 @@ void acknowledgeCommand(int index, const char* uuid, bool state, bool success, c
   HTTPClient http;
   String url = String(BACKEND_BASE_URL) + "/api/esp32/acknowledge";
 
-  http.begin(url);
+  if (!initHttpConnection(http, url)) {
+    return;
+  }
+
   http.addHeader("Content-Type", "application/json");
   http.addHeader("X-Device-Token", RELAYS[index].deviceToken);
-  http.setTimeout(3000);
+  http.setTimeout(4000);
 
   StaticJsonDocument<256> doc;
   doc["commandUuid"]   = uuid;

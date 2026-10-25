@@ -1,8 +1,7 @@
 /**
  * =========================================================================
  * CONFIGURATION TEMPLATE: ESP32 Home Automation Node
- * Copy this file to "config.h" and adjust with your local network settings.
- * DO NOT commit config.h containing real passwords to public repositories.
+ * Copy this file to "config.h" and adjust with your settings.
  * =========================================================================
  */
 
@@ -14,17 +13,18 @@ const char* WIFI_SSID     = "YOUR_WIFI_SSID";
 const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";
 
 // 2. Backend Server Settings
-// NOTE: "localhost" or "127.0.0.1" CANNOT be reached from ESP32.
-// Use your computer's local network LAN IP (e.g. http://192.168.1.50:8080)
-const char* BACKEND_BASE_URL = "http://192.168.1.100:8080";
+// For LOCAL testing on your home Wi-Fi:
+// const char* BACKEND_BASE_URL = "http://192.168.1.100:8080";
+//
+// For RAILWAY Cloud Deployment (Public HTTPS):
+// Replace with your real Railway public domain:
+const char* BACKEND_BASE_URL = "https://your-project.up.railway.app";
 
 // 3. Device Identification & Token Credentials
-// Each device matches a registered device in the Spring Boot backend
 const char* DEVICE_KEY   = "ESP32_RELAY_01";       // Primary controller device key
 const char* DEVICE_TOKEN = "sec_lr_light_9921";     // Secret device authentication token
 
 // 4. Multi-Relay Configuration on this ESP32 Node
-// Configured for 4-Channel 5V Relay Module with optocoupler isolation
 #define NUM_RELAYS 4
 
 struct RelayMapping {
@@ -43,9 +43,7 @@ const RelayMapping RELAYS[NUM_RELAYS] = {
     { "ESP32_RELAY_04", "sec_br_fan_6654",   32, 4, "Bedroom Fan" }
 };
 
-// 5. Electrical Relay Logic
-// Most 5V optocoupler relay boards (Songle, etc.) are ACTIVE-LOW (LOW = ON, HIGH = OFF)
-// Set to true for active-low, false for active-high.
+// 5. Electrical Relay Logic (Active-Low: LOW activates relay)
 const bool RELAY_ACTIVE_LOW = true;
 
 // 6. Timing Intervals (in milliseconds)
