@@ -1,0 +1,304 @@
+/* ==========================================================================
+   IoT-Based Home Automation System - Stylesheet
+   Modern Glassmorphism, Theme Modes, Device Animations
+   ========================================================================== */
+
+:root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-card: rgba(30, 41, 59, 0.7);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent-blue: #38bdf8;
+    --accent-indigo: #6366f1;
+    --success-green: #22c55e;
+    --danger-red: #ef4444;
+    --warning-yellow: #f59e0b;
+    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+[data-theme="light"] {
+    --bg-primary: #f1f5f9;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --border-color: rgba(0, 0, 0, 0.08);
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --accent-blue: #0284c7;
+    --accent-indigo: #4f46e5;
+    --card-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.08);
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.45);
+}
+
+.navbar {
+    background: var(--bg-card) !important;
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text-primary) !important;
+}
+
+.nav-link {
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.2s ease;
+}
+
+.nav-link.active, .nav-link:hover {
+    color: var(--text-primary) !important;
+    background: rgba(56, 189, 248, 0.15);
+}
+
+/* Summary Counter Cards */
+.metric-box {
+    padding: 1.25rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+}
+
+.metric-val {
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.metric-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Device Appliance Cards */
+.device-card {
+    position: relative;
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+.device-card.is-on {
+    border-color: rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 24px rgba(56, 189, 248, 0.18);
+}
+
+.device-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.is-on .device-icon-wrapper.light-icon {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+}
+
+.is-on .device-icon-wrapper.fan-icon {
+    background: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+}
+
+/* Fan Rotating Animation */
+@keyframes spinFan {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.fan-spinning {
+    animation: spinFan 0.6s linear infinite;
+    display: inline-block;
+}
+
+/* Custom Large Toggle Switch */
+.switch-large {
+    position: relative;
+    display: inline-block;
+    width: 64px;
+    height: 34px;
+}
+
+.switch-large input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider-round {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #475569;
+    transition: .3s;
+    border-radius: 34px;
+}
+
+.slider-round:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+input:checked + .slider-round {
+    background-color: var(--success-green);
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+}
+
+input:checked + .slider-round:before {
+    transform: translateX(30px);
+}
+
+input:disabled + .slider-round {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Pulse Online Badge */
+.pulse-online {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--success-green);
+    box-shadow: 0 0 8px var(--success-green);
+    animation: pulseGlow 2s infinite;
+}
+
+.pulse-offline {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--danger-red);
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+/* Status Badges */
+.badge-custom {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: 20px;
+}
+
+/* Tables */
+.table-custom {
+    color: var(--text-primary);
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+.table-custom th {
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    border: none;
+    padding: 0.75rem 1rem;
+}
+
+.table-custom td {
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.9rem 1rem;
+    vertical-align: middle;
+}
+
+.table-custom tr td:first-child {
+    border-left: 1px solid var(--border-color);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.table-custom tr td:last-child {
+    border-right: 1px solid var(--border-color);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* Modal styling */
+.modal-content {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+}
+
+.form-control, .form-select {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 10px;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-blue);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+}
+
+/* Hardware Pinout Badge */
+.pin-badge {
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.8rem;
+}

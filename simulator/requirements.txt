@@ -1,0 +1,4 @@
+# Python ESP32 Hardware Simulator Dependencies
+# The simulator is built using Python 3 standard libraries (urllib.request, json, time)
+# No external pip packages are strictly required.
+# Compatible with Python 3.8+ through Python 3.14+
